@@ -1,16 +1,16 @@
 import Image from "next/image";
 
-import { ProductCard } from "@/components/product-card";
+import { TarjetaProducto } from "@/components/tarjeta-producto";
 import { Badge } from "@/components/ui/badge";
 import { buttonStyles } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Container } from "@/components/ui/container";
 import { Section } from "@/components/ui/section";
 import {
-  demoBands,
-  demoCategories,
-  demoProducts,
-} from "@/features/home/demo-content";
+  bandasDemostracion,
+  categoriasDemostracion,
+  productosDemostracion,
+} from "@/features/inicio/contenido-demostracion";
 
 export default function Home() {
   return (
@@ -88,17 +88,17 @@ export default function Home() {
         description="Una muestra visual de cómo se organizará el catálogo. El contenido dinámico llegará en fases posteriores."
       >
         <div className="grid gap-3 sm:grid-cols-3 sm:gap-4">
-          {demoCategories.map((category, index) => (
+          {categoriasDemostracion.map((categoria, indice) => (
             <Card
-              key={category}
+              key={categoria}
               className="group relative min-h-40 overflow-hidden bg-surface-raised p-5 sm:min-h-52"
             >
               <div className="absolute inset-0 bg-grain opacity-20 transition-opacity group-hover:opacity-40" />
               <span className="relative text-xs font-bold tracking-[0.2em] text-muted">
-                0{index + 1}
+                0{indice + 1}
               </span>
               <h3 className="absolute bottom-5 left-5 right-5 font-display text-3xl font-bold uppercase leading-none tracking-wide text-foreground sm:text-4xl">
-                {category}
+                {categoria}
               </h3>
               <span
                 aria-hidden="true"
@@ -118,15 +118,15 @@ export default function Home() {
         title="Bandas"
       >
         <div className="flex flex-wrap gap-3">
-          {demoBands.map((band) => (
+          {bandasDemostracion.map((banda) => (
             <span
-              key={band}
+              key={banda}
               className="inline-flex min-h-12 items-center rounded-sm border border-border bg-surface px-5 font-display text-lg font-bold uppercase tracking-[0.08em] text-foreground"
             >
               <span aria-hidden="true" className="mr-3 text-accent">
                 ★
               </span>
-              {band}
+              {banda}
             </span>
           ))}
         </div>
@@ -139,8 +139,8 @@ export default function Home() {
         description="Cards de demostración para validar jerarquía, estados y comportamiento responsive. No corresponden a un catálogo real."
       >
         <div className="grid min-w-0 grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {demoProducts.map((product) => (
-            <ProductCard key={product.name} {...product} />
+          {productosDemostracion.map((producto) => (
+            <TarjetaProducto key={producto.nombre} {...producto} />
           ))}
         </div>
       </Section>

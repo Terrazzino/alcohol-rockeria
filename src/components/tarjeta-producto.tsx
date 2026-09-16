@@ -4,76 +4,76 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/cn";
 
-export type ProductCardStatus = "available" | "out-of-stock";
+export type EstadoVisualProducto = "disponible" | "sin-stock";
 
-export interface ProductCardProps {
-  name: string;
-  band?: string;
-  price: string;
-  imageSrc: string;
-  imageAlt: string;
-  status: ProductCardStatus;
-  featured?: boolean;
-  artworkTone?: "gold" | "charcoal" | "cream";
+export interface PropiedadesTarjetaProducto {
+  nombre: string;
+  banda?: string;
+  precio: string;
+  rutaImagen: string;
+  textoAlternativoImagen: string;
+  estado: EstadoVisualProducto;
+  destacado?: boolean;
+  tonoVisual?: "dorado" | "carbon" | "crema";
 }
 
 const toneClasses = {
-  gold: "from-accent/25 via-surface-raised to-background-secondary",
-  charcoal: "from-border via-surface to-background",
-  cream: "from-[#584c27] via-surface-raised to-background-secondary",
+  dorado: "from-accent/25 via-surface-raised to-background-secondary",
+  carbon: "from-border via-surface to-background",
+  crema: "from-[#584c27] via-surface-raised to-background-secondary",
 } as const;
 
-export function ProductCard({
-  artworkTone = "charcoal",
-  band,
-  featured = false,
-  imageAlt,
-  imageSrc,
-  name,
-  price,
-  status,
-}: ProductCardProps) {
-  const isAvailable = status === "available";
+export function TarjetaProducto({
+  banda,
+  destacado = false,
+  estado,
+  nombre,
+  precio,
+  rutaImagen,
+  textoAlternativoImagen,
+  tonoVisual = "carbon",
+}: PropiedadesTarjetaProducto) {
+  const estaDisponible = estado === "disponible";
 
   return (
     <Card className="group min-w-0 overflow-hidden transition duration-300 hover:-translate-y-1 hover:border-border-strong hover:shadow-elevated">
       <div
         className={cn(
           "relative aspect-[4/5] overflow-hidden bg-gradient-to-br",
-          toneClasses[artworkTone],
+          toneClasses[tonoVisual],
         )}
       >
         <div className="absolute inset-0 bg-grain opacity-30" />
         <Image
-          src={imageSrc}
-          alt={imageAlt}
+          src={rutaImagen}
+          alt={textoAlternativoImagen}
           fill
           sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 25vw"
           className={cn(
             "object-contain p-8 transition duration-500 group-hover:scale-105 sm:p-10",
-            !isAvailable && "grayscale",
+            !estaDisponible && "grayscale",
           )}
         />
         <div className="absolute left-3 top-3 flex flex-wrap gap-2">
-          {featured && <Badge variant="accent">Destacado</Badge>}
-          <Badge variant={isAvailable ? "success" : "error"}>
-            {isAvailable ? "Disponible" : "Sin stock"}
+          {destacado && <Badge variant="accent">Destacado</Badge>}
+          <Badge variant={estaDisponible ? "success" : "error"}>
+            {estaDisponible ? "Disponible" : "Sin stock"}
           </Badge>
         </div>
       </div>
       <CardContent className="grid gap-3">
         <div className="min-w-0">
-          {band && (
+          {banda && (
             <p className="mb-1 text-xs font-bold uppercase tracking-[0.14em] text-accent">
-              {band}
+              {banda}
             </p>
           )}
           <h3 className="font-display text-xl font-bold uppercase leading-tight tracking-wide text-foreground">
-            {name}
+            {nombre}
           </h3>
         </div>
         <p className="text-lg font-bold tabular-nums text-foreground">
-          {price}
+          {precio}
         </p>
       </CardContent>
     </Card>
