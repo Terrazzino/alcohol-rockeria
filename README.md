@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Alcohol Rockería
 
-## Getting Started
+Base web mobile-first para el catálogo administrable de Alcohol Rockería. El MVP permitirá explorar productos y preparar una consulta por WhatsApp; no procesará pagos ni incluirá Mercado Pago.
 
-First, run the development server:
+El desarrollo se organiza estrictamente por las fases definidas en [`docs/roadmap.md`](docs/roadmap.md). Los requisitos funcionales completos están en [`docs/spec.md`](docs/spec.md) y las reglas de trabajo en [`AGENTS.md`](AGENTS.md).
+
+## Estado
+
+Fase 0: inicialización técnica del proyecto. Todavía no hay catálogo, integración con Supabase ni funcionalidades de negocio.
+
+## Stack
+
+- Next.js con App Router
+- React
+- TypeScript estricto
+- Tailwind CSS
+- ESLint
+- Prettier
+
+Supabase, Vitest y Testing Library se incorporarán en las fases en las que sean necesarios.
+
+## Requisitos
+
+- Node.js 20.9 o superior
+- npm
+
+## Puesta en marcha
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Luego se puede abrir [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+No se requieren variables de entorno en la Fase 0. El archivo `.env.example` se ampliará cuando se configure Supabase en la Fase 2.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Comandos
 
-## Learn More
+```bash
+npm run dev          # servidor de desarrollo
+npm run build        # build de produccion
+npm run start        # ejecutar el build de produccion
+npm run lint         # validar ESLint
+npm run typecheck    # validar TypeScript sin emitir archivos
+npm run format       # aplicar Prettier
+npm run format:check # comprobar formato sin modificar archivos
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Estructura inicial
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```text
+src/
+|-- app/         # rutas, layouts y estilos globales del App Router
+|-- components/  # componentes reutilizables y sin lógica de negocio
+|-- data/        # contratos y acceso a datos
+|-- domain/      # tipos y reglas de dominio puras
+|-- features/    # modulos funcionales organizados por capacidad
+`-- lib/         # utilidades técnicas compartidas
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Las carpetas están preparadas como límites arquitectónicos; se poblarán en sus fases correspondientes. La integración con Supabase quedará aislada del dominio cuando se implemente en la Fase 2.
