@@ -68,7 +68,7 @@ Usar una terminal privada y evitar reutilizar la contraseña del ejemplo. El scr
 ## Rutas
 
 - `/admin/login`: formulario público de acceso.
-- `/admin`: dashboard mínimo protegido.
+- `/admin` y sus rutas descendientes: panel protegido.
 - `/api/auth/*`: endpoints internos administrados por Auth.js.
 
 Las tarjetas del dashboard son informativas. Los CRUD comienzan en fases posteriores.

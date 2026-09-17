@@ -6,7 +6,7 @@ El desarrollo se organiza estrictamente por las fases definidas en [`docs/roadma
 
 ## Estado
 
-Fase 3: autenticación administrativa con Auth.js. Existe login, cierre de sesión, dashboard protegido y aprovisionamiento de administradores por consola. Todavía no hay CRUD ni catálogo conectado a la base.
+Fase 4: base visual del panel administrativo. Existe un layout protegido mobile-first, navegación responsive, dashboard y páginas placeholder para los futuros módulos. Todavía no hay CRUD ni catálogo conectado a la base.
 
 ## Stack
 

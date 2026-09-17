@@ -2,9 +2,6 @@ import type { Metadata } from "next";
 import { Inter, Oswald } from "next/font/google";
 import type { ReactNode } from "react";
 
-import { Footer } from "@/components/layout/footer";
-import { Header } from "@/components/layout/header";
-
 import "./globals.css";
 
 const inter = Inter({
@@ -36,9 +33,7 @@ export default function RootLayout({
         >
           Saltar al contenido
         </a>
-        <Header />
         {children}
-        <Footer />
       </body>
     </html>
   );

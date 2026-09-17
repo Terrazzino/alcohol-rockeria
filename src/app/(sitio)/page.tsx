@@ -12,7 +12,7 @@ import {
   productosDemostracion,
 } from "@/features/inicio/contenido-demostracion";
 
-export default function Home() {
+export default function PaginaInicio() {
   return (
     <main id="contenido-principal" className="flex-1">
       <section
