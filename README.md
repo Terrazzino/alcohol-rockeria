@@ -6,7 +6,7 @@ El desarrollo se organiza estrictamente por las fases definidas en [`docs/roadma
 
 ## Estado
 
-Fase 4: base visual del panel administrativo. Existe un layout protegido mobile-first, navegación responsive, dashboard y páginas placeholder para los futuros módulos. Todavía no hay CRUD ni catálogo conectado a la base.
+Fase 5: CRUD de categorías completo. El panel protegido permite listar, crear, editar, ordenar, ocultar/mostrar y eliminar categorías persistidas en Neon mediante Prisma. Los demás módulos administrativos y el catálogo público continúan pendientes de sus fases.
 
 ## Stack
 

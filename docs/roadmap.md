@@ -114,7 +114,9 @@ Crear la persistencia inicial con Prisma ORM y PostgreSQL alojado en Neon.
 
 ---
 
-# Fase 5 — CRUD Categorías
+# Fase 5 — CRUD Categorías ✅
+
+**Estado:** completada.
 
 ## Entregables
 

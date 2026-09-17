@@ -10,6 +10,7 @@ interface DialogoConfirmacionProps {
   descripcion: string;
   textoConfirmar?: string;
   procesando?: boolean;
+  mensajeError?: string;
   alConfirmar: () => void;
   alCancelar: () => void;
 }
@@ -20,6 +21,7 @@ export function DialogoConfirmacion({
   descripcion,
   textoConfirmar = "Eliminar",
   procesando = false,
+  mensajeError,
   alConfirmar,
   alCancelar,
 }: DialogoConfirmacionProps) {
@@ -64,6 +66,14 @@ export function DialogoConfirmacion({
         >
           {descripcion}
         </p>
+        {mensajeError ? (
+          <p
+            role="alert"
+            className="mt-4 rounded-sm border border-error/40 bg-error-soft p-3 text-sm text-error-light"
+          >
+            {mensajeError}
+          </p>
+        ) : null}
         <div className="mt-7 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
           <Button
             variant="secondary"
