@@ -6,7 +6,7 @@ El desarrollo se organiza estrictamente por las fases definidas en [`docs/roadma
 
 ## Estado
 
-Fase 7: CRUD de categorías, bandas y productos completo. El panel protegido permite administrar relaciones, estado, destacado, precio y orden de los productos persistidos en Neon mediante Prisma. Variantes, imágenes y los demás módulos continúan pendientes de sus fases.
+Fase 8: CRUD de categorías, bandas, productos y variantes completo. El panel protegido permite administrar variantes por producto, disponibilidad, SKU, orden y precios específicos persistidos en Neon mediante Prisma. Imágenes y los demás módulos continúan pendientes de sus fases.
 
 ## Stack
 

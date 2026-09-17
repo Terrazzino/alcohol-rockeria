@@ -43,13 +43,15 @@ export async function obtenerProductos(): Promise<ProductoListado[]> {
       orden: true,
       categoria: { select: { id: true, nombre: true } },
       banda: { select: { id: true, nombre: true } },
+      _count: { select: { variantes: true } },
     },
     orderBy: [{ orden: "asc" }, { nombre: "asc" }],
   });
 
-  return productos.map((producto) => ({
+  return productos.map(({ _count, ...producto }) => ({
     ...producto,
     precioBase: producto.precioBase.toString(),
+    cantidadVariantes: _count.variantes,
   }));
 }
 

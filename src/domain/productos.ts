@@ -40,27 +40,29 @@ export function formatearPrecioArgentino(valor: string) {
     : `$ ${parteEntera},${decimales.toString().padStart(2, "0")}`;
 }
 
-const esquemaPrecio = z
-  .string({ error: "Ingresá el precio base." })
-  .transform(normalizarPrecio)
-  .superRefine((valor, contexto) => {
-    const centavos = precioACentavos(valor);
+export function crearEsquemaPrecio(mensajeRequerido = "Ingresá un precio.") {
+  return z
+    .string({ error: mensajeRequerido })
+    .transform(normalizarPrecio)
+    .superRefine((valor, contexto) => {
+      const centavos = precioACentavos(valor);
 
-    if (centavos === null) {
-      contexto.addIssue({
-        code: "custom",
-        message: "Ingresá un precio válido con hasta 2 decimales.",
-      });
-      return;
-    }
+      if (centavos === null) {
+        contexto.addIssue({
+          code: "custom",
+          message: "Ingresá un precio válido con hasta 2 decimales.",
+        });
+        return;
+      }
 
-    if (centavos > PRECIO_MAXIMO_CENTAVOS) {
-      contexto.addIssue({
-        code: "custom",
-        message: "El precio no puede superar $ 9.999.999.999,99.",
-      });
-    }
-  });
+      if (centavos > PRECIO_MAXIMO_CENTAVOS) {
+        contexto.addIssue({
+          code: "custom",
+          message: "El precio no puede superar $ 9.999.999.999,99.",
+        });
+      }
+    });
+}
 
 const esquemaOrdenOpcional = z.preprocess(
   (valor) => (typeof valor === "string" && valor.trim() === "" ? null : valor),
@@ -97,7 +99,7 @@ export const esquemaProducto = z.object({
     .trim()
     .min(1, "Ingresá la descripción.")
     .max(5000, "La descripción no puede superar 5000 caracteres."),
-  precioBase: esquemaPrecio,
+  precioBase: crearEsquemaPrecio("Ingresá el precio base."),
   categoriaId: z.uuid("Seleccioná una categoría válida."),
   bandaId: esquemaBandaOpcional,
   estado: z.enum(ESTADOS_PRODUCTO, {
@@ -127,6 +129,7 @@ export interface ProductoListado {
   orden: number | null;
   categoria: Omit<OpcionRelacionProducto, "estaVisible">;
   banda: Omit<OpcionRelacionProducto, "estaVisible"> | null;
+  cantidadVariantes: number;
 }
 
 export interface ProductoEditable {
