@@ -1,21 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { generarSlug, validarCategoria } from "./categorias";
-
-describe("generarSlug", () => {
-  it("normaliza mayúsculas, espacios y tildes", () => {
-    expect(generarSlug("Remeras Rock Nacional")).toBe("remeras-rock-nacional");
-    expect(generarSlug("  Música y Más  ")).toBe("musica-y-mas");
-  });
-
-  it("elimina caracteres especiales y guiones repetidos", () => {
-    expect(generarSlug("Rock & Roll --- Rosario!!!")).toBe("rock-roll-rosario");
-  });
-
-  it("convierte la eñe a ene", () => {
-    expect(generarSlug("Diseños de España")).toBe("disenos-de-espana");
-  });
-});
+import { validarCategoria } from "./categorias";
 
 describe("validarCategoria", () => {
   const categoriaValida = {

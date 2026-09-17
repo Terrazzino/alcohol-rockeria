@@ -7,49 +7,47 @@ import { ContenedorFormularioAdmin } from "@/components/admin/contenedor-formula
 import { Button, buttonStyles } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import type { CategoriaEditable } from "@/domain/categorias";
+import type { BandaEditable } from "@/domain/bandas";
 import { generarSlug } from "@/domain/slug";
 import {
-  accionActualizarCategoria,
-  accionCrearCategoria,
-  type EstadoFormularioCategoria,
-} from "@/features/categorias/acciones";
+  accionActualizarBanda,
+  accionCrearBanda,
+  type EstadoFormularioBanda,
+} from "@/features/bandas/acciones";
 
-interface FormularioCategoriaProps {
-  categoria?: CategoriaEditable;
+interface FormularioBandaProps {
+  banda?: BandaEditable;
 }
 
-const estadoInicial: EstadoFormularioCategoria = {};
+const estadoInicial: EstadoFormularioBanda = {};
 
-export function FormularioCategoria({ categoria }: FormularioCategoriaProps) {
-  const accion = categoria
-    ? accionActualizarCategoria.bind(null, categoria.id)
-    : accionCrearCategoria;
+export function FormularioBanda({ banda }: FormularioBandaProps) {
+  const accion = banda
+    ? accionActualizarBanda.bind(null, banda.id)
+    : accionCrearBanda;
   const [estado, ejecutarAccion, pendiente] = useActionState(
     accion,
     estadoInicial,
   );
-  const [nombre, setNombre] = useState(categoria?.nombre ?? "");
-  const [slug, setSlug] = useState(categoria?.slug ?? "");
-  const [slugPersonalizado, setSlugPersonalizado] = useState(
-    Boolean(categoria),
-  );
+  const [nombre, setNombre] = useState(banda?.nombre ?? "");
+  const [slug, setSlug] = useState(banda?.slug ?? "");
+  const [slugPersonalizado, setSlugPersonalizado] = useState(Boolean(banda));
 
   return (
     <form action={ejecutarAccion} noValidate>
       <ContenedorFormularioAdmin
-        titulo={categoria ? "Editar categoría" : "Nueva categoría"}
-        descripcion="Definí cómo se identifica, ordena y muestra esta categoría."
+        titulo={banda ? "Editar banda" : "Nueva banda"}
+        descripcion="Definí cómo se identifica, ordena y muestra esta banda."
         acciones={
           <>
             <Link
-              href="/admin/categorias"
+              href="/admin/bandas"
               className={buttonStyles({ variant: "secondary" })}
             >
               Cancelar
             </Link>
             <Button type="submit" disabled={pendiente}>
-              {pendiente ? "Guardando…" : "Guardar categoría"}
+              {pendiente ? "Guardando…" : "Guardar banda"}
             </Button>
           </>
         }
@@ -89,7 +87,7 @@ export function FormularioCategoria({ categoria }: FormularioCategoriaProps) {
               setSlugPersonalizado(true);
             }}
             error={estado.errores?.slug}
-            hint="Se usa como identificador legible. Ejemplo: remeras-rock."
+            hint="Se usa como identificador legible. Ejemplo: la-renga."
             autoComplete="off"
             maxLength={120}
             required
@@ -100,7 +98,7 @@ export function FormularioCategoria({ categoria }: FormularioCategoriaProps) {
           id="descripcion"
           name="descripcion"
           label="Descripción (opcional)"
-          defaultValue={categoria?.descripcion ?? ""}
+          defaultValue={banda?.descripcion ?? ""}
           error={estado.errores?.descripcion}
           maxLength={1000}
         />
@@ -110,7 +108,7 @@ export function FormularioCategoria({ categoria }: FormularioCategoriaProps) {
           name="urlImagen"
           type="url"
           label="URL de imagen (opcional)"
-          defaultValue={categoria?.urlImagen ?? ""}
+          defaultValue={banda?.urlImagen ?? ""}
           error={estado.errores?.urlImagen}
           placeholder="https://…"
           maxLength={2048}
@@ -122,7 +120,7 @@ export function FormularioCategoria({ categoria }: FormularioCategoriaProps) {
             name="orden"
             type="number"
             label="Orden"
-            defaultValue={categoria?.orden ?? 0}
+            defaultValue={banda?.orden ?? 0}
             error={estado.errores?.orden}
             hint="Los números menores aparecen primero."
             min={0}
@@ -134,7 +132,7 @@ export function FormularioCategoria({ categoria }: FormularioCategoriaProps) {
             <input
               type="checkbox"
               name="estaVisible"
-              defaultChecked={categoria?.estaVisible ?? true}
+              defaultChecked={banda?.estaVisible ?? true}
               className="size-5 accent-accent"
             />
             Visible en el catálogo

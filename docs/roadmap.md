@@ -131,7 +131,9 @@ Crear la persistencia inicial con Prisma ORM y PostgreSQL alojado en Neon.
 
 ---
 
-# Fase 6 — CRUD Bandas
+# Fase 6 — CRUD Bandas ✅
+
+**Estado:** completada.
 
 ## Entregables
 
@@ -144,7 +146,9 @@ Crear la persistencia inicial con Prisma ORM y PostgreSQL alojado en Neon.
 
 ---
 
-# Fase 7 — CRUD Productos
+# Fase 7 — CRUD Productos ✅
+
+**Estado:** completada.
 
 ## Entregables
 
