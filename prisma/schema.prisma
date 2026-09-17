@@ -1,0 +1,131 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum EstadoProducto {
+  ACTIVO
+  SIN_STOCK
+  OCULTO
+
+  @@map("estado_producto")
+}
+
+model Categoria {
+  id            String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nombre        String
+  slug          String     @unique
+  descripcion   String?
+  urlImagen     String?    @map("url_imagen")
+  orden         Int        @default(0)
+  estaVisible   Boolean    @default(true) @map("esta_visible")
+  creadoEn      DateTime   @default(now()) @map("creado_en") @db.Timestamptz(3)
+  actualizadoEn DateTime   @default(now()) @updatedAt @map("actualizado_en") @db.Timestamptz(3)
+  productos     Producto[]
+
+  @@index([estaVisible, orden])
+  @@map("categorias")
+}
+
+model Banda {
+  id            String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nombre        String
+  slug          String     @unique
+  descripcion   String?
+  urlImagen     String?    @map("url_imagen")
+  orden         Int        @default(0)
+  estaVisible   Boolean    @default(true) @map("esta_visible")
+  creadoEn      DateTime   @default(now()) @map("creado_en") @db.Timestamptz(3)
+  actualizadoEn DateTime   @default(now()) @updatedAt @map("actualizado_en") @db.Timestamptz(3)
+  productos     Producto[]
+
+  @@index([estaVisible, orden])
+  @@map("bandas")
+}
+
+model Producto {
+  id            String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nombre        String
+  slug          String             @unique
+  descripcion   String
+  precioBase    Decimal            @map("precio_base") @db.Decimal(12, 2)
+  categoriaId   String             @map("categoria_id") @db.Uuid
+  bandaId       String?            @map("banda_id") @db.Uuid
+  estado        EstadoProducto     @default(ACTIVO)
+  destacado     Boolean            @default(false)
+  orden         Int?
+  creadoEn      DateTime           @default(now()) @map("creado_en") @db.Timestamptz(3)
+  actualizadoEn DateTime           @default(now()) @updatedAt @map("actualizado_en") @db.Timestamptz(3)
+  categoria     Categoria          @relation(fields: [categoriaId], references: [id], onDelete: Restrict)
+  banda         Banda?             @relation(fields: [bandaId], references: [id], onDelete: SetNull)
+  imagenes      ImagenProducto[]
+  variantes     VarianteProducto[]
+
+  @@index([categoriaId])
+  @@index([bandaId])
+  @@index([estado, destacado])
+  @@map("productos")
+}
+
+model ImagenProducto {
+  id               String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  productoId       String   @map("producto_id") @db.Uuid
+  rutaImagen       String   @unique @map("ruta_imagen")
+  textoAlternativo String   @map("texto_alternativo")
+  orden            Int      @default(0)
+  esPrincipal      Boolean  @default(false) @map("es_principal")
+  creadoEn         DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+  producto         Producto @relation(fields: [productoId], references: [id], onDelete: Cascade)
+
+  @@index([productoId, orden])
+  @@map("imagenes_producto")
+}
+
+model VarianteProducto {
+  id               String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  productoId       String   @map("producto_id") @db.Uuid
+  nombre           String
+  sku              String?  @unique
+  precioEspecifico Decimal? @map("precio_especifico") @db.Decimal(12, 2)
+  estaDisponible   Boolean  @default(true) @map("esta_disponible")
+  orden            Int      @default(0)
+  creadoEn         DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+  actualizadoEn    DateTime @default(now()) @updatedAt @map("actualizado_en") @db.Timestamptz(3)
+  producto         Producto @relation(fields: [productoId], references: [id], onDelete: Cascade)
+
+  @@index([productoId, orden])
+  @@map("variantes_producto")
+}
+
+model ConfiguracionTienda {
+  id                 Int      @id @default(1) @db.SmallInt
+  nombreTienda       String   @map("nombre_tienda")
+  tituloPrincipal    String   @map("titulo_principal")
+  subtituloPrincipal String   @map("subtitulo_principal")
+  numeroWhatsapp     String   @map("numero_whatsapp")
+  urlInstagram       String   @map("url_instagram")
+  direccion          String
+  urlMaps            String   @map("url_maps")
+  horarios           String
+  textoHistoria      String   @map("texto_historia")
+  textoContacto      String   @map("texto_contacto")
+  actualizadoEn      DateTime @default(now()) @updatedAt @map("actualizado_en") @db.Timestamptz(3)
+
+  @@map("configuracion_tienda")
+}
+
+model Administrador {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  correo         String   @unique
+  hashContrasena String   @map("hash_contrasena")
+  nombre         String?
+  activo         Boolean  @default(true)
+  creadoEn       DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+  actualizadoEn  DateTime @default(now()) @updatedAt @map("actualizado_en") @db.Timestamptz(3)
+
+  @@map("administradores")
+}

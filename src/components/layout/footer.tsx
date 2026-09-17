@@ -3,9 +3,9 @@ import Image from "next/image";
 import { Container } from "@/components/ui/container";
 
 const footerNavigation = [
-  { label: "Inicio", href: "#inicio" },
-  { label: "Productos", href: "#productos" },
-  { label: "El Local", href: "#local" },
+  { label: "Inicio", href: "/#inicio" },
+  { label: "Productos", href: "/#productos" },
+  { label: "El Local", href: "/#local" },
 ] as const;
 
 export function Footer() {

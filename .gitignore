@@ -33,6 +33,9 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 !.env.example
+.env
+.env.local
+.env*.local
 
 # vercel
 .vercel
@@ -41,6 +44,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# supabase local
-/supabase/.branches/
-/supabase/.temp/
+# prisma client generado
+/src/generated/prisma/

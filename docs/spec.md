@@ -98,7 +98,6 @@ Incluido:
 - Productos destacados
 - Configuración del comercio
 - Mobile-first
-- Seed/demo data
 
 No incluido:
 
@@ -138,84 +137,84 @@ Las eliminaciones deben ser seguras y evitar inconsistencias.
 
 ## 6. Modelo conceptual
 
-### Category
+### Categoria
 
 Campos iniciales:
 
 - id
-- name
+- nombre
 - slug
-- description opcional
-- image_url opcional
-- sort_order
-- is_visible
-- created_at
-- updated_at
+- descripcion opcional
+- url_imagen opcional
+- orden
+- esta_visible
+- creado_en
+- actualizado_en
 
-### Band
+### Banda
 
 Campos iniciales:
 
 - id
-- name
+- nombre
 - slug
-- image_url opcional
-- description opcional
-- sort_order
-- is_visible
-- created_at
-- updated_at
+- url_imagen opcional
+- descripcion opcional
+- orden
+- esta_visible
+- creado_en
+- actualizado_en
 
-### Product
+### Producto
 
 Campos iniciales:
 
 - id
-- name
+- nombre
 - slug
-- description
-- base_price
-- category_id
-- band_id opcional
-- status
-- is_featured
-- sort_order opcional
-- created_at
-- updated_at
+- descripcion
+- precio_base
+- categoria_id
+- banda_id opcional
+- estado
+- destacado
+- orden opcional
+- creado_en
+- actualizado_en
 
 Estados mínimos:
 
-- ACTIVE
-- OUT_OF_STOCK
-- HIDDEN
+- ACTIVO
+- SIN_STOCK
+- OCULTO
 
-### ProductImage
+### ImagenProducto
 
 - id
-- product_id
-- storage_path
-- alt_text
-- sort_order
-- is_primary
-- created_at
+- producto_id
+- ruta_imagen
+- texto_alternativo
+- orden
+- es_principal
+- creado_en
 
-### ProductVariant
+### VarianteProducto
 
 Modelo flexible.
 
 Campos iniciales:
 
 - id
-- product_id
-- name
+- producto_id
+- nombre
 - sku opcional
-- price_override opcional
-- is_available
-- sort_order
-- created_at
-- updated_at
+- precio_especifico opcional
+- esta_disponible
+- orden
+- creado_en
+- actualizado_en
 
-Ejemplos de `name`:
+Ejemplos de `nombre`:
 
 - Talle M
 - Talle XL
@@ -224,23 +223,35 @@ Ejemplos de `name`:
 
 La implementación puede evolucionar hacia atributos más estructurados si el catálogo lo requiere.
 
-### StoreSettings
+### ConfiguracionTienda
 
 Registro único o configuración equivalente.
 
 Campos:
 
-- store_name
-- hero_title
-- hero_subtitle
-- whatsapp_number
-- instagram_url
-- address
-- maps_url
-- opening_hours
-- history_text
-- contact_text
-- updated_at
+- nombre_tienda
+- titulo_principal
+- subtitulo_principal
+- numero_whatsapp
+- url_instagram
+- direccion
+- url_maps
+- horarios
+- texto_historia
+- texto_contacto
+- actualizado_en
+
+### Administrador
+
+- id
+- correo único y normalizado
+- hash_contrasena
+- nombre opcional
+- activo
+- creado_en
+- actualizado_en
+
+La contraseña original nunca se persiste y no existe registro público.
 
 ---
 
@@ -279,13 +290,13 @@ Cada producto debe permitir:
 
 ### 7.4 Productos sin stock
 
-Un producto `OUT_OF_STOCK`:
+Un producto `SIN_STOCK`:
 
 - puede seguir siendo visible;
 - debe mostrar claramente “Sin stock”;
 - no debería poder agregarse al carrito salvo decisión futura.
 
-Un producto `HIDDEN`:
+Un producto `OCULTO`:
 
 - no aparece públicamente.
 
@@ -308,7 +319,7 @@ El administrador puede editar manualmente el precio de cualquier producto.
 Una variante puede tener:
 
 - el mismo precio base; o
-- un precio particular mediante `price_override`.
+- un precio particular mediante `precio_especifico`.
 
 ### 8.3 Actualización masiva
 
@@ -541,35 +552,11 @@ CRUD completo.
 
 ---
 
-## 16. Seed de demostración
+## 16. Carga inicial de contenido
 
-Debe existir un mecanismo reproducible.
+No se utilizarán seed ni datos demo automáticos. Categorías, bandas, productos, variantes e imágenes se cargarán manualmente desde el panel administrativo para validar sus CRUD reales.
 
-### Categorías iniciales
-
-- Remeras
-- Gorras
-- Accesorios
-
-### Bandas iniciales
-
-- Metallica
-- Motörhead
-- La Renga
-
-### Productos de muestra
-
-Ejemplo:
-
-1. Remera Metallica — Master of Puppets
-2. Remera Metallica — Ride the Lightning
-3. Gorra Motörhead
-4. Remera La Renga
-5. Pulsera rockera genérica
-
-Los nombres, precios e imágenes son demostrativos.
-
-No usar imágenes con copyright descargadas automáticamente sin autorización. Para demo pueden usarse placeholders o material provisto por el cliente.
+El primer administrador se crea exclusivamente mediante la herramienta de consola documentada. No existe registro público.
 
 ---
 
@@ -600,13 +587,15 @@ La experiencia móvil es la referencia principal.
 
 ## 18. Seguridad
 
-- Supabase Auth para admin.
+- Auth.js con credenciales para autenticación administrativa.
 - Rutas admin protegidas.
 - Validaciones del lado servidor donde corresponda.
-- Storage con políticas correctas.
+- Acceso a PostgreSQL exclusivamente desde el servidor mediante Prisma.
 - No exponer claves privadas.
-- RLS donde corresponda.
 - No confiar en roles enviados por el cliente.
+- No almacenar contraseñas en texto plano.
+- Hashear contraseñas con bcrypt antes de persistirlas.
+- Bloquear el acceso de administradores inactivos.
 
 ---
 
@@ -644,7 +633,7 @@ El MVP se considera funcional si:
 18. Puede cambiar disponibilidad.
 19. Puede marcar destacados.
 20. Puede editar la configuración principal del comercio.
-21. Los datos demo pueden cargarse sin hardcodear la UI.
+21. Los datos comerciales pueden cargarse manualmente desde el panel.
 22. No existe integración con Mercado Pago.
 
 ---

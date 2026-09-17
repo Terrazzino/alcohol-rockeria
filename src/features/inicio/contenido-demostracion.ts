@@ -1,7 +1,7 @@
 import type { PropiedadesTarjetaProducto } from "@/components/tarjeta-producto";
 
 // Contenido exclusivamente visual de Fase 1. No representa entidades de dominio
-// ni reemplaza el seed o la capa de datos que se incorporarán en fases posteriores.
+// ni reemplaza la carga manual por CRUD ni la futura capa de datos del catálogo.
 export const categoriasDemostracion = [
   "Remeras",
   "Gorras",

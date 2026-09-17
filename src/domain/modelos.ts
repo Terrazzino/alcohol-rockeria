@@ -42,7 +42,7 @@ export interface Producto {
 export interface ImagenProducto {
   id: string;
   productoId: string;
-  rutaStorage: string;
+  rutaImagen: string;
   textoAlternativo: string;
   orden: number;
   esPrincipal: boolean;
@@ -73,5 +73,14 @@ export interface ConfiguracionTienda {
   horarios: string;
   textoHistoria: string;
   textoContacto: string;
+  actualizadoEn: string;
+}
+
+export interface Administrador {
+  id: string;
+  correo: string;
+  nombre: string | null;
+  activo: boolean;
+  creadoEn: string;
   actualizadoEn: string;
 }

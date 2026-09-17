@@ -4,18 +4,18 @@ import Link from "next/link";
 import { Container } from "@/components/ui/container";
 
 const navigation = [
-  { label: "Inicio", href: "#inicio" },
-  { label: "Productos", href: "#productos" },
-  { label: "Categorías", href: "#categorias" },
-  { label: "Bandas", href: "#bandas" },
-  { label: "El Local", href: "#local" },
-  { label: "Contacto", href: "#contacto" },
+  { label: "Inicio", href: "/#inicio" },
+  { label: "Productos", href: "/#productos" },
+  { label: "Categorías", href: "/#categorias" },
+  { label: "Bandas", href: "/#bandas" },
+  { label: "El Local", href: "/#local" },
+  { label: "Contacto", href: "/#contacto" },
 ] as const;
 
 function Brand() {
   return (
     <Link
-      href="#inicio"
+      href="/"
       className="flex min-h-11 items-center gap-3 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
       aria-label="Alcohol Rockería, ir al inicio"
     >

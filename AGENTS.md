@@ -13,10 +13,10 @@ El proyecto es una plataforma web mobile-first para una rockería de Rosario con
 - Next.js con App Router
 - TypeScript estricto
 - Tailwind CSS
-- Supabase
-  - PostgreSQL
-  - Auth
-  - Storage
+- Prisma ORM
+- PostgreSQL
+- Neon
+- Auth.js
 - Vercel para deploy
 - ESLint
 - Prettier
@@ -58,11 +58,11 @@ No incorporar otras dependencias importantes sin justificar su necesidad.
    - lógica de dominio
    - acceso a datos
    - validaciones
-   - integración con Supabase
+   - integración con Prisma/PostgreSQL
 
 5. **Evitar lógica de negocio dentro de componentes React.**
 
-6. **Evitar lógica de negocio directamente acoplada a Supabase.**
+6. **Evitar lógica de negocio directamente acoplada a Prisma.**
    Las funciones importantes deben poder testearse sin depender de la base de datos.
 
 7. **No introducir Mercado Pago en el MVP.**
@@ -105,18 +105,18 @@ Los textos definitivos deben quedar configurables si se usan en la web.
 
 ## Entidades principales
 
-- AdminUser
-- Category
-- Band
-- Product
-- ProductImage
-- ProductVariant
-- StoreSettings
-- CartItem (estado cliente)
+- Administrador
+- Categoria
+- Banda
+- Producto
+- ImagenProducto
+- VarianteProducto
+- ConfiguracionTienda
+- ItemCarrito (estado cliente)
 - opcional futuro:
-  - Order
-  - OrderItem
-  - Payment
+  - Pedido
+  - ItemPedido
+  - Pago
 
 ---
 
@@ -159,9 +159,9 @@ Cada producto debe poder tener:
 
 Estados mínimos:
 
-- ACTIVE
-- OUT_OF_STOCK
-- HIDDEN
+- ACTIVO
+- SIN_STOCK
+- OCULTO
 
 ### Variantes
 
@@ -243,29 +243,12 @@ Antes de operaciones masivas o destructivas:
 
 ---
 
-## Seed/demo data
+## Carga inicial de datos
 
-El proyecto debe incluir una forma clara de cargar datos de demostración.
-
-Debe incluir al menos:
-
-### Categorías
-- Remeras
-- Gorras
-- Accesorios
-
-### Bandas
-- Metallica
-- Motörhead
-- La Renga
-
-### Productos de ejemplo
-Al menos 5 productos distribuidos entre esas categorías y bandas.
-
-Los datos de demo:
-- NO deben estar hardcodeados en la UI;
-- deben cargarse mediante seed, script o inserción inicial documentada;
-- deben poder eliminarse luego sin tocar código.
+- No utilizar seed ni datos demo automáticos.
+- Categorías, bandas, productos, variantes e imágenes se cargan manualmente desde el panel administrativo.
+- El primer administrador se aprovisiona mediante una herramienta de consola segura; esto no es un seed.
+- No debe existir registro público de administradores.
 
 ---
 
@@ -281,7 +264,9 @@ Los datos de demo:
 - No silenciar errores.
 - Validar entradas de formularios.
 - No confiar en datos provenientes del cliente.
-- Mantener seguridad del panel admin con Supabase Auth y autorización real.
+- Mantener seguridad del panel admin con autenticación y autorización reales.
+- No almacenar contraseñas en texto plano.
+- Verificar en el servidor que el administrador continúe activo antes de operaciones protegidas.
 
 ---
 

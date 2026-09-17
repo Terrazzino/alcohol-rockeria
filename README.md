@@ -6,7 +6,7 @@ El desarrollo se organiza estrictamente por las fases definidas en [`docs/roadma
 
 ## Estado
 
-Fase 2: infraestructura de Supabase y modelo de datos inicial. Todavía no hay seed, catálogo funcional ni panel administrativo.
+Fase 3: autenticación administrativa con Auth.js. Existe login, cierre de sesión, dashboard protegido y aprovisionamiento de administradores por consola. Todavía no hay CRUD ni catálogo conectado a la base.
 
 ## Stack
 
@@ -14,7 +14,10 @@ Fase 2: infraestructura de Supabase y modelo de datos inicial. Todavía no hay s
 - React
 - TypeScript estricto
 - Tailwind CSS
-- Supabase (PostgreSQL, Auth y Storage)
+- Prisma ORM
+- PostgreSQL en Neon
+- Auth.js con credenciales
+- bcryptjs
 - ESLint
 - Prettier
 
@@ -22,7 +25,7 @@ Vitest y Testing Library se incorporarán en las fases en las que exista lógica
 
 ## Requisitos
 
-- Node.js 20.9 o superior
+- Node.js 20.19 o superior
 - npm
 
 ## Puesta en marcha
@@ -35,14 +38,15 @@ npm run dev
 
 Luego se puede abrir [http://localhost:3000](http://localhost:3000).
 
-Completar en `.env.local` las variables públicas obtenidas en `Project Settings > API` de Supabase:
+Crear `.env.local` a partir de `.env.example` y completar las conexiones obtenidas desde el botón **Connect** del proyecto en Neon:
 
 ```dotenv
-NEXT_PUBLIC_SUPABASE_URL=https://tu-proyecto.supabase.co
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=tu-clave-publica
+DATABASE_URL="postgresql://usuario:clave@ep-proyecto-pooler.region.aws.neon.tech/neondb?sslmode=require"
+DIRECT_URL="postgresql://usuario:clave@ep-proyecto.region.aws.neon.tech/neondb?sslmode=require"
+AUTH_SECRET="reemplazar-por-un-secreto-seguro"
 ```
 
-La clave publicable está diseñada para usarse en el cliente junto con RLS. Nunca se debe exponer una clave `service_role`.
+`DATABASE_URL` es la conexión agrupada que utiliza la aplicación. `DIRECT_URL` evita el pooler durante migraciones. `AUTH_SECRET` firma y cifra las sesiones; puede generarse con `npx auth secret`. Todas son variables exclusivas del servidor y nunca deben usar el prefijo `NEXT_PUBLIC_`.
 
 ## Comandos
 
@@ -54,11 +58,20 @@ npm run lint         # validar ESLint
 npm run typecheck    # validar TypeScript sin emitir archivos
 npm run format       # aplicar Prettier
 npm run format:check # comprobar formato sin modificar archivos
-npm run supabase:start # iniciar Supabase local (requiere Docker)
-npm run supabase:reset # reconstruir la base local desde migraciones
-npm run supabase:test  # ejecutar pruebas SQL/RLS cuando existan
-npm run supabase:stop  # detener Supabase local
+npm test             # ejecutar tests unitarios con Vitest
+npm run db:generate       # generar Prisma Client
+npm run db:validate       # validar prisma/schema.prisma
+npm run db:migrate        # crear/aplicar una migración de desarrollo
+npm run db:migrate:deploy # aplicar migraciones pendientes en deploy
+npm run db:studio         # abrir Prisma Studio
+npm run admin:crear       # crear un administrador con variables temporales
 ```
+
+## Primer administrador
+
+No existe registro público ni seed. Para crear un administrador, definir temporalmente `ADMIN_CORREO`, `ADMIN_CONTRASENA` y, opcionalmente, `ADMIN_NOMBRE`, ejecutar `npm run admin:crear` y limpiar esas variables de la terminal. La contraseña debe tener al menos 12 caracteres y nunca se persiste sin hashear.
+
+El flujo completo de autenticación y los ejemplos de consola están documentados en [`docs/autenticacion.md`](docs/autenticacion.md).
 
 ## Estructura inicial
 
@@ -69,7 +82,7 @@ src/
 |-- data/        # contratos y acceso a datos
 |-- domain/      # tipos y reglas de dominio puras
 |-- features/    # modulos funcionales organizados por capacidad
-`-- lib/         # utilidades técnicas compartidas e integración con Supabase
+`-- lib/         # utilidades técnicas compartidas y cliente Prisma
 ```
 
-La integración con Supabase está aislada en `src/lib/supabase`; los tipos propios del negocio permanecen en `src/domain`. El esquema, las decisiones de seguridad y el flujo local están documentados en [`docs/supabase.md`](docs/supabase.md).
+El cliente Prisma vive en `src/lib/prisma.ts`; los tipos propios del negocio permanecen en `src/domain`. El esquema, las relaciones y el flujo con Neon están documentados en [`docs/base-de-datos.md`](docs/base-de-datos.md).

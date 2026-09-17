@@ -59,149 +59,62 @@ Revisar primero a ~390 px.
 
 ---
 
-# Fase 2 — Supabase y modelo de datos
+# Fase 2 — Prisma, PostgreSQL y modelo de datos
 
 ## Objetivos
 
-Crear backend inicial.
+Crear la persistencia inicial con Prisma ORM y PostgreSQL alojado en Neon.
 
 ## Tablas
 
-- categories
-- bands
-- products
-- product_images
-- product_variants
-- store_settings
+- categorias
+- bandas
+- productos
+- imagenes_producto
+- variantes_producto
+- configuracion_tienda
+- administradores
 
 ## Entregables
 
-- proyecto Supabase;
-- migraciones o SQL versionado;
-- RLS;
-- Storage;
-- tipos;
-- cliente servidor;
-- cliente browser cuando corresponda.
+- configuración Prisma;
+- conexión preparada para Neon;
+- migraciones SQL versionadas;
+- constraints y relaciones;
+- tipos generados;
+- cliente Prisma reutilizable del lado servidor;
+- documentación de desarrollo y despliegue.
 
 ---
 
-# Fase 3 — Seed/demo
-
-## Objetivos
-
-Cargar contenido realista para poder presentar el sitio.
-
-## Datos mínimos
-
-Categorías:
-- Remeras
-- Gorras
-- Accesorios
-
-Bandas:
-- Metallica
-- Motörhead
-- La Renga
-
-Productos:
-- mínimo 5
+# Fase 3 — Autenticación administrativa
 
 ## Entregables
 
-- script o mecanismo reproducible;
-- documentación de cómo ejecutar seed;
-- datos editables y eliminables desde admin.
+- Auth.js con credenciales;
+- contraseñas hasheadas;
+- aprovisionamiento inicial por consola, sin registro público;
+- login y logout;
+- sesión segura;
+- ruta `/admin` protegida;
+- bloqueo de administradores inactivos;
+- dashboard inicial sin CRUD.
 
 ---
 
-# Fase 4 — Catálogo público
-
-## Objetivos
-
-Construir la experiencia de navegación.
+# Fase 4 — Base visual del panel administrativo
 
 ## Entregables
 
-- listado de productos;
-- cards;
-- categorías;
-- bandas;
-- estados;
-- paginación o carga apropiada;
-- empty states.
+- layout del panel;
+- navegación administrativa mobile-first;
+- estados de carga, error y vacío;
+- patrones para formularios, tablas y confirmaciones;
+- dashboard preparado para los módulos reales.
 
 ---
 
-# Fase 5 — Búsqueda y filtros
-
-## Entregables
-
-- búsqueda;
-- filtro por categoría;
-- filtro por banda;
-- filtro por disponibilidad;
-- URL state cuando sea conveniente;
-- experiencia mobile clara.
-
----
-
-# Fase 6 — Detalle de producto
-
-## Entregables
-
-- galería;
-- descripción;
-- precio;
-- banda;
-- categoría;
-- variantes;
-- disponibilidad;
-- selector de cantidad;
-- botón de carrito;
-- botón de consulta individual.
-
----
-
-# Fase 7 — Carrito de consulta
-
-## Objetivos
-
-Permitir armar pedido sin cobrar.
-
-## Entregables
-
-- agregar al carrito;
-- modificar cantidades;
-- eliminar;
-- vaciar;
-- persistencia local;
-- total informativo;
-- integración con WhatsApp;
-- mensaje estructurado.
-
-## Fuera de alcance
-
-- cobro;
-- Mercado Pago;
-- reserva de stock;
-- orden confirmada.
-
----
-
-# Fase 8 — Autenticación admin
-
-## Entregables
-
-- login;
-- logout;
-- ruta protegida;
-- autorización;
-- manejo de sesión.
-
----
-
-# Fase 9 — CRUD Categorías
+# Fase 5 — CRUD Categorías
 
 ## Entregables
 
@@ -216,7 +129,7 @@ Permitir armar pedido sin cobrar.
 
 ---
 
-# Fase 10 — CRUD Bandas
+# Fase 6 — CRUD Bandas
 
 ## Entregables
 
@@ -229,7 +142,7 @@ Permitir armar pedido sin cobrar.
 
 ---
 
-# Fase 11 — CRUD Productos
+# Fase 7 — CRUD Productos
 
 ## Entregables
 
@@ -244,12 +157,26 @@ Permitir armar pedido sin cobrar.
 - precio;
 - descripción;
 - slug;
-- imágenes;
-- variantes.
+- relaciones con categoría y banda.
 
 ---
 
-# Fase 12 — Imágenes y Storage
+# Fase 8 — CRUD Variantes
+
+## Entregables
+
+- listado por producto;
+- crear;
+- editar;
+- eliminar;
+- nombre;
+- precio opcional;
+- disponibilidad;
+- orden.
+
+---
+
+# Fase 9 — Gestión de imágenes
 
 ## Entregables
 
@@ -261,22 +188,11 @@ Permitir armar pedido sin cobrar.
 - alt text;
 - optimización.
 
----
-
-# Fase 13 — Variantes
-
-## Entregables
-
-- CRUD variantes;
-- nombre;
-- precio opcional;
-- disponibilidad;
-- selector público;
-- carrito respetando variante.
+El proveedor de almacenamiento se definirá en esta fase.
 
 ---
 
-# Fase 14 — Gestión de precios
+# Fase 10 — Gestión de precios
 
 ## Objetivos
 
@@ -294,7 +210,7 @@ Resolver uno de los principales casos administrativos.
 
 ---
 
-# Fase 15 — Configuración del comercio
+# Fase 11 — Configuración del comercio
 
 ## Entregables
 
@@ -312,7 +228,91 @@ CRUD/edición de:
 
 ---
 
-# Fase 16 — Home final
+# Fase 12 — Catálogo público conectado a datos reales
+
+## Objetivos
+
+Construir la navegación pública después de validar la carga manual mediante los CRUD administrativos.
+
+## Entregables
+
+- listado de productos reales;
+- cards;
+- categorías;
+- bandas;
+- estados;
+- paginación o carga apropiada;
+- empty states.
+
+---
+
+# Fase 13 — Búsqueda y filtros
+
+## Entregables
+
+- búsqueda;
+- filtro por categoría;
+- filtro por banda;
+- filtro por disponibilidad;
+- estado en URL cuando sea conveniente;
+- experiencia mobile clara.
+
+---
+
+# Fase 14 — Detalle de producto
+
+## Entregables
+
+- galería;
+- descripción;
+- precio;
+- banda;
+- categoría;
+- variantes;
+- disponibilidad;
+- selector de cantidad;
+- botón de carrito;
+- botón de consulta individual.
+
+---
+
+# Fase 15 — Carrito de consulta
+
+## Objetivos
+
+Permitir armar un pedido sin cobrar.
+
+## Entregables
+
+- agregar al carrito;
+- respetar la variante seleccionada;
+- modificar cantidades;
+- eliminar;
+- vaciar;
+- persistencia local;
+- total informativo.
+
+## Fuera de alcance
+
+- cobro;
+- Mercado Pago;
+- reserva de stock;
+- orden confirmada.
+
+---
+
+# Fase 16 — WhatsApp
+
+## Entregables
+
+- mensaje estructurado;
+- productos, variantes, cantidades y subtotales;
+- total informativo;
+- apertura segura de WhatsApp.
+
+---
+
+# Fase 17 — Home final
 
 ## Entregables
 
@@ -327,7 +327,7 @@ CRUD/edición de:
 
 ---
 
-# Fase 17 — QA
+# Fase 18 — QA y optimización
 
 ## Revisiones
 
@@ -348,13 +348,13 @@ CRUD/edición de:
 
 ---
 
-# Fase 18 — Deploy
+# Fase 19 — Deploy
 
 ## Entregables
 
 - proyecto en Vercel;
 - variables de entorno;
-- Supabase producción;
+- PostgreSQL/Neon producción;
 - dominio;
 - HTTPS;
 - pruebas finales.
