@@ -20,6 +20,7 @@ import {
   type ErroresProducto,
 } from "@/domain/productos";
 import { exigirAdministradorActivo } from "@/features/autenticacion/sesion";
+import { eliminarImagenAlmacenada } from "@/lib/almacenamiento-imagenes";
 
 export interface EstadoFormularioProducto {
   mensaje?: string;
@@ -244,8 +245,22 @@ export async function accionEliminarProducto(
   }
 
   try {
-    await eliminarProducto(id);
+    const rutasImagenes = await eliminarProducto(id);
+    if (!rutasImagenes) return { mensaje: "El producto ya no existe." };
+
+    const resultadosLimpieza = await Promise.allSettled(
+      rutasImagenes.map((ruta) => eliminarImagenAlmacenada(ruta)),
+    );
+    if (
+      resultadosLimpieza.some((resultado) => resultado.status === "rejected")
+    ) {
+      console.error(
+        "No se pudieron eliminar todos los archivos Blob del producto",
+        resultadosLimpieza,
+      );
+    }
     revalidatePath("/admin/productos");
+    revalidatePath("/admin/imagenes");
     return { exito: true, mensaje: "Producto eliminado." };
   } catch (error) {
     if (esErrorPrisma(error) && error.code === "P2025") {

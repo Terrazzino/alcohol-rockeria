@@ -11,6 +11,8 @@ interface DialogoConfirmacionProps {
   textoConfirmar?: string;
   procesando?: boolean;
   mensajeError?: string;
+  etiqueta?: string;
+  varianteConfirmar?: "primary" | "danger";
   alConfirmar: () => void;
   alCancelar: () => void;
 }
@@ -22,6 +24,8 @@ export function DialogoConfirmacion({
   textoConfirmar = "Eliminar",
   procesando = false,
   mensajeError,
+  etiqueta = "Acción destructiva",
+  varianteConfirmar = "danger",
   alConfirmar,
   alCancelar,
 }: DialogoConfirmacionProps) {
@@ -53,7 +57,11 @@ export function DialogoConfirmacion({
       aria-describedby="descripcion-dialogo-confirmacion"
     >
       <div className="p-5 sm:p-6">
-        <p className="eyebrow text-error-light">Acción destructiva</p>
+        <p
+          className={`eyebrow ${varianteConfirmar === "danger" ? "text-error-light" : "text-accent"}`}
+        >
+          {etiqueta}
+        </p>
         <h2
           id="titulo-dialogo-confirmacion"
           className="mt-3 font-display text-3xl font-bold uppercase leading-none tracking-wide"
@@ -82,7 +90,11 @@ export function DialogoConfirmacion({
           >
             Cancelar
           </Button>
-          <Button variant="danger" onClick={alConfirmar} disabled={procesando}>
+          <Button
+            variant={varianteConfirmar}
+            onClick={alConfirmar}
+            disabled={procesando}
+          >
             {procesando ? "Procesando…" : textoConfirmar}
           </Button>
         </div>

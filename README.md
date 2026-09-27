@@ -6,7 +6,7 @@ El desarrollo se organiza estrictamente por las fases definidas en [`docs/roadma
 
 ## Estado
 
-Fase 8: CRUD de categorías, bandas, productos y variantes completo. El panel protegido permite administrar variantes por producto, disponibilidad, SKU, orden y precios específicos persistidos en Neon mediante Prisma. Imágenes y los demás módulos continúan pendientes de sus fases.
+Fase 10: gestión de precios completa. El panel protegido permite editar precios individuales y preparar actualizaciones porcentuales masivas por todos los productos, categoría, banda o selección manual, con preview y confirmación antes de una persistencia atómica. Los módulos posteriores, desde configuración del comercio, continúan pendientes de sus fases.
 
 ## Stack
 
@@ -17,6 +17,7 @@ Fase 8: CRUD de categorías, bandas, productos y variantes completo. El panel pr
 - Prisma ORM
 - PostgreSQL en Neon
 - Auth.js con credenciales
+- Vercel Blob para imágenes de producto
 - bcryptjs
 - ESLint
 - Prettier
@@ -44,9 +45,24 @@ Crear `.env.local` a partir de `.env.example` y completar las conexiones obtenid
 DATABASE_URL="postgresql://usuario:clave@ep-proyecto-pooler.region.aws.neon.tech/neondb?sslmode=require"
 DIRECT_URL="postgresql://usuario:clave@ep-proyecto.region.aws.neon.tech/neondb?sslmode=require"
 AUTH_SECRET="reemplazar-por-un-secreto-seguro"
+BLOB_READ_WRITE_TOKEN="vercel_blob_rw_reemplazar"
 ```
 
-`DATABASE_URL` es la conexión agrupada que utiliza la aplicación. `DIRECT_URL` evita el pooler durante migraciones. `AUTH_SECRET` firma y cifra las sesiones; puede generarse con `npx auth secret`. Todas son variables exclusivas del servidor y nunca deben usar el prefijo `NEXT_PUBLIC_`.
+`DATABASE_URL` es la conexión agrupada que utiliza la aplicación. `DIRECT_URL` evita el pooler durante migraciones. `AUTH_SECRET` firma y cifra las sesiones; puede generarse con `npx auth secret`. `BLOB_READ_WRITE_TOKEN` se obtiene al conectar al proyecto un Blob store público desde Vercel Storage. Todas son variables exclusivas del servidor y nunca deben usar el prefijo `NEXT_PUBLIC_`.
+
+## Imágenes de producto
+
+Cada imagen se asocia a un producto y se persiste como archivo público en Vercel Blob, mientras que su URL, texto alternativo, orden y estado principal se guardan en PostgreSQL. Se aceptan JPEG, PNG, WebP y AVIF de hasta 4 MB. La primera imagen de un producto se vuelve principal automáticamente y la base de datos garantiza que no exista más de una principal por producto.
+
+Para desarrollo local, crear el Blob store en Vercel, conectarlo al proyecto y copiar su `BLOB_READ_WRITE_TOKEN` a `.env.local`. No se agregaron cambios al schema Prisma ni migraciones en esta fase: el modelo `ImagenProducto` y el índice único parcial necesario ya formaban parte del modelo inicial.
+
+## Gestión de precios
+
+La ruta protegida `/admin/precios` centraliza el acceso a la edición individual y permite aplicar aumentos o disminuciones porcentuales a todos los productos, una categoría, una banda o una selección manual. Los productos ocultos se excluyen por defecto y sólo se modifican si el administrador lo indica expresamente.
+
+La actualización masiva modifica el precio base y los precios específicos de las variantes incluidas. Las variantes sin precio propio continúan heredando el precio base. El porcentaje admite punto o coma y hasta dos decimales, entre `-100 %` y `10.000 %`, excluyendo `0 %`.
+
+Los cálculos se realizan con centavos enteros y centésimas de punto porcentual. El resultado se redondea al centavo más cercano y, ante un empate exacto, hacia arriba. Antes de persistir se muestra un preview completo; al confirmar, Prisma vuelve a comprobar el estado y los precios y aplica todos los cambios dentro de una transacción serializable. No se agregaron cambios al schema Prisma ni migraciones en esta fase.
 
 ## Comandos
 

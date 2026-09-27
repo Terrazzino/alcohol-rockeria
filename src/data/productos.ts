@@ -43,7 +43,7 @@ export async function obtenerProductos(): Promise<ProductoListado[]> {
       orden: true,
       categoria: { select: { id: true, nombre: true } },
       banda: { select: { id: true, nombre: true } },
-      _count: { select: { variantes: true } },
+      _count: { select: { variantes: true, imagenes: true } },
     },
     orderBy: [{ orden: "asc" }, { nombre: "asc" }],
   });
@@ -52,6 +52,7 @@ export async function obtenerProductos(): Promise<ProductoListado[]> {
     ...producto,
     precioBase: producto.precioBase.toString(),
     cantidadVariantes: _count.variantes,
+    cantidadImagenes: _count.imagenes,
   }));
 }
 
@@ -81,8 +82,18 @@ export function actualizarProducto(id: string, datos: DatosProducto) {
   });
 }
 
-export function eliminarProducto(id: string) {
-  return clientePrisma.producto.delete({ where: { id } });
+export async function eliminarProducto(id: string) {
+  return clientePrisma.$transaction(async (transaccion) => {
+    const producto = await transaccion.producto.findUnique({
+      where: { id },
+      select: { imagenes: { select: { rutaImagen: true } } },
+    });
+
+    if (!producto) return null;
+
+    await transaccion.producto.delete({ where: { id } });
+    return producto.imagenes.map((imagen) => imagen.rutaImagen);
+  });
 }
 
 export function cambiarEstadoProducto(

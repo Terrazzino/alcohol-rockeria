@@ -23,6 +23,7 @@ interface AccionesProductoProps {
   estado: EstadoProductoDominio;
   destacado: boolean;
   cantidadVariantes: number;
+  cantidadImagenes: number;
 }
 
 const estadoInicial: EstadoAccionProducto = {};
@@ -33,6 +34,7 @@ export function AccionesProducto({
   estado,
   destacado,
   cantidadVariantes,
+  cantidadImagenes,
 }: AccionesProductoProps) {
   const [dialogoAbierto, setDialogoAbierto] = useState(false);
   const [estadoCambio, accionEstado, cambiandoEstado] = useActionState(
@@ -64,6 +66,12 @@ export function AccionesProducto({
         className={buttonStyles({ variant: "secondary", size: "sm" })}
       >
         Variantes ({cantidadVariantes})
+      </Link>
+      <Link
+        href={`/admin/productos/${id}/imagenes`}
+        className={buttonStyles({ variant: "secondary", size: "sm" })}
+      >
+        Imágenes ({cantidadImagenes})
       </Link>
       <form action={accionEstado} className="flex flex-wrap gap-2">
         <label className="sr-only" htmlFor={`estado-${id}`}>

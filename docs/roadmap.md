@@ -184,7 +184,9 @@ Crear la persistencia inicial con Prisma ORM y PostgreSQL alojado en Neon.
 
 ---
 
-# Fase 9 — Gestión de imágenes
+# Fase 9 — Gestión de imágenes ✅
+
+**Estado:** completada.
 
 ## Entregables
 
@@ -196,11 +198,13 @@ Crear la persistencia inicial con Prisma ORM y PostgreSQL alojado en Neon.
 - alt text;
 - optimización.
 
-El proveedor de almacenamiento se definirá en esta fase.
+Proveedor definido: Vercel Blob público, integrado del lado servidor. Se validan JPEG, PNG, WebP y AVIF de hasta 4 MB; la primera imagen se define como principal automáticamente y PostgreSQL garantiza una sola principal por producto mediante el índice parcial existente.
 
 ---
 
-# Fase 10 — Gestión de precios
+# Fase 10 — Gestión de precios ✅
+
+**Estado:** completada.
 
 ## Objetivos
 
@@ -215,6 +219,8 @@ Resolver uno de los principales casos administrativos.
 - preview;
 - confirmación;
 - cálculo testeado.
+
+La actualización masiva permite aumentos y disminuciones con hasta dos decimales, aplica a todos los productos, categoría, banda o selección manual y excluye productos ocultos salvo inclusión explícita. El preview incluye precios base y precios específicos de variantes. Los cálculos usan centavos enteros, redondeo al centavo más cercano con empates hacia arriba y persistencia atómica mediante una transacción Prisma serializable.
 
 ---
 

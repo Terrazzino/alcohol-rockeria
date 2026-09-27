@@ -12,7 +12,7 @@ export const ETIQUETAS_ESTADO_PRODUCTO: Record<EstadoProductoDominio, string> =
     OCULTO: "Oculto",
   };
 
-const PRECIO_MAXIMO_CENTAVOS = 999_999_999_999;
+export const PRECIO_MAXIMO_CENTAVOS = 999_999_999_999;
 
 export function normalizarPrecio(valor: string) {
   return valor.trim().replace(",", ".");
@@ -130,6 +130,7 @@ export interface ProductoListado {
   categoria: Omit<OpcionRelacionProducto, "estaVisible">;
   banda: Omit<OpcionRelacionProducto, "estaVisible"> | null;
   cantidadVariantes: number;
+  cantidadImagenes: number;
 }
 
 export interface ProductoEditable {
