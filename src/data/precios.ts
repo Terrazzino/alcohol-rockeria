@@ -108,6 +108,18 @@ function precioCoincide(actual: Prisma.Decimal, esperado: string) {
 export async function aplicarActualizacionPrecios(preview: VistaPreviaPrecios) {
   return clientePrisma.$transaction(
     async (transaccion) => {
+      const productosEnAlcance = await transaccion.producto.findMany({
+        where: crearFiltroProductos(preview.solicitud),
+        select: { id: true },
+      });
+      const idsPreview = new Set(preview.productos.map(({ id }) => id));
+      if (
+        productosEnAlcance.length !== idsPreview.size ||
+        productosEnAlcance.some(({ id }) => !idsPreview.has(id))
+      ) {
+        throw new ConflictoActualizacionPrecios();
+      }
+
       for (const esperado of preview.productos) {
         const actual = await transaccion.producto.findUnique({
           where: { id: esperado.id },

@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { Container } from "@/components/ui/container";
+import { AccesoCarrito } from "@/features/carrito/acceso-carrito";
 
 const navigation = [
   { label: "Inicio", href: "/#inicio" },
@@ -17,7 +18,7 @@ function Brand() {
     <Link
       href="/"
       className="flex min-h-11 items-center gap-3 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
-      aria-label="Alcohol Rockería, ir al inicio"
+      aria-label="Ir al inicio"
     >
       <Image
         src="/branding/alcohol-rockeria-logo.png"
@@ -27,10 +28,6 @@ function Brand() {
         className="size-11 object-contain sm:size-12"
         priority
       />
-      <span className="font-display text-lg font-bold uppercase leading-[0.9] tracking-[0.08em] text-foreground sm:text-xl">
-        Alcohol
-        <span className="block text-accent">Rockería</span>
-      </span>
     </Link>
   );
 }
@@ -57,46 +54,49 @@ export function Header() {
       <Container className="flex min-h-18 items-center justify-between py-2">
         <Brand />
 
-        <nav
-          className="hidden items-center gap-1 lg:flex"
-          aria-label="Navegación principal"
-        >
-          <NavigationLinks />
-        </nav>
-
-        <details className="group relative lg:hidden">
-          <summary className="flex min-h-11 min-w-11 cursor-pointer list-none items-center justify-center rounded-sm border border-border bg-surface text-foreground transition-colors marker:content-none hover:border-accent hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent [&::-webkit-details-marker]:hidden">
-            <span className="sr-only">Abrir menú principal</span>
-            <svg
-              aria-hidden="true"
-              viewBox="0 0 24 24"
-              className="size-5 group-open:hidden"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-            >
-              <path d="M4 7h16M4 12h16M4 17h16" />
-            </svg>
-            <svg
-              aria-hidden="true"
-              viewBox="0 0 24 24"
-              className="hidden size-5 group-open:block"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-            >
-              <path d="m6 6 12 12M18 6 6 18" />
-            </svg>
-          </summary>
+        <div className="flex items-center gap-2">
           <nav
-            className="absolute right-0 top-[calc(100%+0.75rem)] w-[min(19rem,calc(100vw-2rem))] rounded-sm border border-border bg-surface p-3 shadow-elevated"
-            aria-label="Navegación móvil"
+            className="hidden items-center gap-1 lg:flex"
+            aria-label="Navegación principal"
           >
-            <NavigationLinks mobile />
+            <NavigationLinks />
           </nav>
-        </details>
+          <AccesoCarrito />
+
+          <details className="group relative lg:hidden">
+            <summary className="flex min-h-11 min-w-11 cursor-pointer list-none items-center justify-center rounded-sm border border-border bg-surface text-foreground transition-colors marker:content-none hover:border-accent hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent [&::-webkit-details-marker]:hidden">
+              <span className="sr-only">Abrir menú principal</span>
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                className="size-5 group-open:hidden"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+              >
+                <path d="M4 7h16M4 12h16M4 17h16" />
+              </svg>
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                className="hidden size-5 group-open:block"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+              >
+                <path d="m6 6 12 12M18 6 6 18" />
+              </svg>
+            </summary>
+            <nav
+              className="absolute right-0 top-[calc(100%+0.75rem)] w-[min(19rem,calc(100vw-2rem))] rounded-sm border border-border bg-surface p-3 shadow-elevated"
+              aria-label="Navegación móvil"
+            >
+              <NavigationLinks mobile />
+            </nav>
+          </details>
+        </div>
       </Container>
     </header>
   );

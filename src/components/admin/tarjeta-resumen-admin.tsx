@@ -26,7 +26,7 @@ export function TarjetaResumenAdmin({
         <span className="flex size-11 items-center justify-center rounded-sm border border-accent/30 bg-accent-soft text-accent">
           <IconoAdmin nombre={icono} className="size-6" />
         </span>
-        <BadgeEstadoAdmin estado="proximamente" />
+        <BadgeEstadoAdmin estado="activo" />
       </div>
       <div className="mt-auto pt-7">
         <h2 className="font-display text-2xl font-bold uppercase tracking-wide text-foreground group-hover:text-accent">

@@ -57,7 +57,7 @@ export function obtenerImagenesPorProducto(
   return clientePrisma.imagenProducto.findMany({
     where: { productoId },
     select: seleccionImagen,
-    orderBy: [{ orden: "asc" }, { creadoEn: "asc" }],
+    orderBy: [{ orden: "asc" }, { creadoEn: "asc" }, { id: "asc" }],
   });
 }
 
@@ -140,7 +140,7 @@ export function eliminarImagen(productoId: string, id: string) {
       const siguiente = await transaccion.imagenProducto.findFirst({
         where: { productoId },
         select: { id: true },
-        orderBy: [{ orden: "asc" }, { creadoEn: "asc" }],
+        orderBy: [{ orden: "asc" }, { creadoEn: "asc" }, { id: "asc" }],
       });
       if (siguiente) {
         await transaccion.imagenProducto.update({

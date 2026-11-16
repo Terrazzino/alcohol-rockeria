@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import {
+  ESTADOS_PRODUCTO,
   PRECIO_MAXIMO_CENTAVOS,
   precioACentavos,
   type EstadoProductoDominio,
@@ -25,6 +26,8 @@ export const ETIQUETAS_ALCANCE_PRECIOS: Record<AlcancePrecios, string> = {
 export const PORCENTAJE_MINIMO_CENTESIMAS = -10_000;
 export const PORCENTAJE_MAXIMO_CENTESIMAS = 1_000_000;
 export const MAXIMO_PRODUCTOS_SELECCIONADOS = 1_000;
+const MAXIMO_PRODUCTOS_PREVIEW = 10_000;
+const MAXIMO_VARIANTES_PREVIEW_POR_PRODUCTO = 1_000;
 
 export interface SolicitudActualizacionPrecios {
   alcance: AlcancePrecios;
@@ -91,6 +94,98 @@ export interface VistaPreviaPrecios {
   productos: ProductoPreviewPrecio[];
   cantidadVariantes: number;
   cantidadOcultos: number;
+}
+
+const esquemaPrecioPreview = z.string().refine((valor) => {
+  const centavos = precioACentavos(valor);
+  return centavos !== null && centavos <= PRECIO_MAXIMO_CENTAVOS;
+});
+
+const esquemaSolicitudNormalizada = z
+  .object({
+    alcance: z.enum(ALCANCES_PRECIOS),
+    referenciaId: z.uuid().nullable(),
+    productoIds: z
+      .array(z.uuid())
+      .max(MAXIMO_PRODUCTOS_SELECCIONADOS)
+      .refine((ids) => new Set(ids).size === ids.length),
+    incluirOcultos: z.boolean(),
+    porcentajeCentesimas: z
+      .number()
+      .int()
+      .min(PORCENTAJE_MINIMO_CENTESIMAS)
+      .max(PORCENTAJE_MAXIMO_CENTESIMAS)
+      .refine((porcentaje) => porcentaje !== 0),
+  })
+  .superRefine((solicitud, contexto) => {
+    const requiereReferencia =
+      solicitud.alcance === "CATEGORIA" || solicitud.alcance === "BANDA";
+    if (requiereReferencia !== (solicitud.referenciaId !== null)) {
+      contexto.addIssue({ code: "custom", path: ["referenciaId"] });
+    }
+    const requiereProductos = solicitud.alcance === "SELECCION";
+    if (requiereProductos !== solicitud.productoIds.length > 0) {
+      contexto.addIssue({ code: "custom", path: ["productoIds"] });
+    }
+  });
+
+const esquemaVariantePreview = z.object({
+  id: z.uuid(),
+  nombre: z.string().trim().min(1).max(100),
+  precioEspecifico: esquemaPrecioPreview,
+  precioResultante: esquemaPrecioPreview,
+});
+
+const esquemaProductoPreview = z.object({
+  id: z.uuid(),
+  nombre: z.string().trim().min(1).max(150),
+  estado: z.enum(ESTADOS_PRODUCTO),
+  precioActual: esquemaPrecioPreview,
+  precioResultante: esquemaPrecioPreview,
+  categoria: z.object({
+    id: z.uuid(),
+    nombre: z.string().trim().min(1).max(100),
+  }),
+  banda: z
+    .object({
+      id: z.uuid(),
+      nombre: z.string().trim().min(1).max(100),
+    })
+    .nullable(),
+  variantes: z
+    .array(esquemaVariantePreview)
+    .max(MAXIMO_VARIANTES_PREVIEW_POR_PRODUCTO),
+});
+
+const esquemaVistaPrevia = z
+  .object({
+    solicitud: esquemaSolicitudNormalizada,
+    productos: z.array(esquemaProductoPreview).max(MAXIMO_PRODUCTOS_PREVIEW),
+    cantidadVariantes: z.number().int().min(0),
+    cantidadOcultos: z.number().int().min(0),
+  })
+  .superRefine((preview, contexto) => {
+    const idsProductos = preview.productos.map(({ id }) => id);
+    const idsVariantes = preview.productos.flatMap(({ variantes }) =>
+      variantes.map(({ id }) => id),
+    );
+    const cantidadVariantes = idsVariantes.length;
+    const cantidadOcultos = preview.productos.filter(
+      ({ estado }) => estado === "OCULTO",
+    ).length;
+
+    if (
+      new Set(idsProductos).size !== idsProductos.length ||
+      new Set(idsVariantes).size !== idsVariantes.length ||
+      preview.cantidadVariantes !== cantidadVariantes ||
+      preview.cantidadOcultos !== cantidadOcultos
+    ) {
+      contexto.addIssue({ code: "custom", message: "Preview inconsistente." });
+    }
+  });
+
+export function validarVistaPreviaPrecios(entrada: unknown) {
+  return esquemaVistaPrevia.safeParse(entrada);
 }
 
 export type CampoSolicitudPrecios =

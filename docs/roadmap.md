@@ -224,7 +224,9 @@ La actualización masiva permite aumentos y disminuciones con hasta dos decimale
 
 ---
 
-# Fase 11 — Configuración del comercio
+# Fase 11 — Configuración del comercio ✅
+
+**Estado:** completada.
 
 ## Entregables
 
@@ -240,9 +242,13 @@ CRUD/edición de:
 - textos;
 - historia.
 
+La administración protegida permite crear y editar el registro único de configuración con los campos definidos en la especificación. Incluye validación de dominio, normalización del número de WhatsApp, validación de URLs y feedback de guardado. Estos datos aún no se conectan al sitio público.
+
 ---
 
-# Fase 12 — Catálogo público conectado a datos reales
+# Fase 12 — Catálogo público conectado a datos reales ✅
+
+**Estado:** completada.
 
 ## Objetivos
 
@@ -258,9 +264,13 @@ Construir la navegación pública después de validar la carga manual mediante l
 - paginación o carga apropiada;
 - empty states.
 
+La portada consume categorías y bandas visibles y productos activos o sin stock desde PostgreSQL mediante consultas Prisma del lado servidor. El listado está paginado de a 12 elementos, respeta el orden administrativo, utiliza precios y estados reales y selecciona la imagen principal —o la primera según el orden configurado— con su texto alternativo. Los productos ocultos no se exponen y los casos sin datos, sin imagen o con error tienen estados explícitos. No se conectó todavía la configuración de tienda ni se adelantaron búsqueda, filtros o detalle de producto.
+
 ---
 
-# Fase 13 — Búsqueda y filtros
+# Fase 13 — Búsqueda y filtros ✅
+
+**Estado:** completada.
 
 ## Entregables
 
@@ -271,9 +281,13 @@ Construir la navegación pública después de validar la carga manual mediante l
 - estado en URL cuando sea conveniente;
 - experiencia mobile clara.
 
+La búsqueda se ejecuta en PostgreSQL sobre nombre y descripción del producto, categoría y banda. Los filtros públicos por categoría, banda y disponibilidad se combinan como intersección y respetan visibilidad y estado. Los criterios normalizados se representan en la URL, se conservan entre páginas y se restablecen a la primera página al aplicar cambios. La interfaz incluye resumen de criterios, limpieza y un estado vacío específico sin adelantar detalle, carrito ni funciones posteriores.
+
 ---
 
-# Fase 14 — Detalle de producto
+# Fase 14 — Detalle de producto ✅
+
+**Estado:** completada.
 
 ## Entregables
 
@@ -288,9 +302,13 @@ Construir la navegación pública después de validar la carga manual mediante l
 - botón de carrito;
 - botón de consulta individual.
 
+La ruta pública `/productos/[slug]` muestra datos reales mediante una consulta Prisma server-side y excluye productos ocultos. Incluye galería ordenada, estado sin imagen, descripción, precio base, relaciones públicas, disponibilidad general y variantes con disponibilidad y precio efectivo propios. Los slugs inválidos, inexistentes u ocultos resuelven con `notFound()`. El selector y las acciones de carrito y consulta se representan deshabilitados, sin adelantar la persistencia del carrito ni la integración con WhatsApp de las fases siguientes.
+
 ---
 
-# Fase 15 — Carrito de consulta
+# Fase 15 — Carrito de consulta ✅
+
+**Estado:** completada.
 
 ## Objetivos
 
@@ -313,9 +331,13 @@ Permitir armar un pedido sin cobrar.
 - reserva de stock;
 - orden confirmada.
 
+El carrito usa estado React y persistencia local versionada, validada y segura ante datos corruptos. Distingue cada combinación producto/variante, acumula selecciones idénticas y permite modificar cantidades, eliminar, vaciar con confirmación y consultar subtotales y total informativos. Los productos sin stock y las variantes no disponibles no se pueden agregar. Los precios persistidos se tratan como instantáneas no autoritativas y se actualizan al volver a agregar la combinación; la confirmación definitiva queda para la consulta. No se implementó generación de mensajes ni apertura de WhatsApp.
+
 ---
 
-# Fase 16 — WhatsApp
+# Fase 16 — WhatsApp ✅
+
+**Estado:** completada.
 
 ## Entregables
 
@@ -324,9 +346,13 @@ Permitir armar un pedido sin cobrar.
 - total informativo;
 - apertura segura de WhatsApp.
 
+El carrito genera mediante reglas puras y testeadas un mensaje legible con productos, variantes opcionales, cantidades, precios unitarios y subtotales de referencia, más el total informativo y la aclaración de confirmación comercial. El número se obtiene del registro único de `ConfiguracionTienda` con una consulta server-side limitada al campo necesario y se valida defensivamente. La acción usa `wa.me`, codifica el mensaje una sola vez, abre una pestaña segura y conserva el carrito; si la selección está vacía o la configuración falta o es inválida, no genera enlaces rotos. No se modificaron el schema Prisma, las migraciones ni las dependencias.
+
 ---
 
-# Fase 17 — Home final
+# Fase 17 — Home final ✅
+
+**Estado:** completada.
 
 ## Entregables
 
@@ -339,9 +365,17 @@ Permitir armar un pedido sin cobrar.
 - redes;
 - WhatsApp.
 
+La Home definitiva conserva el catálogo real con búsqueda, filtros y paginación, y suma una portada editorial construida con datos administrados. El hero, la trayectoria, la ubicación, los horarios y el contacto consumen server-side el registro único validado de `ConfiguracionTienda`. Las categorías y bandas visibles respetan el orden administrativo, muestran sus imágenes cuando existen y enlazan a los filtros públicos actuales. Se consultan como máximo cuatro productos destacados en estado `ACTIVO` o `SIN_STOCK`, reutilizando `TarjetaProducto` y las mismas reglas de imagen, precio y estado del catálogo. Instagram, Maps y el WhatsApp general utilizan enlaces externos seguros; el enlace general no genera un carrito ni un mensaje vacío. Todos los bloques contemplan configuración, colecciones e imágenes ausentes sin datos demo. No se modificaron el schema Prisma, las migraciones ni las dependencias.
+
 ---
 
 # Fase 18 — QA y optimización
+
+## Estado
+
+Pendiente de cierre. La auditoría de código y las verificaciones automáticas se completaron, y se corrigieron los hallazgos funcionales y de seguridad con solución compatible. La matriz manual sobre navegador, base de prueba y Vercel Blob queda explícitamente pendiente en [`qa-manual.md`](qa-manual.md).
+
+`npm audit` ya no informa vulnerabilidades críticas ni alertas en las dependencias runtime corregibles detectadas. Mantiene alertas altas transitivas en ESLint y Prisma CLI para las que actualmente propone downgrades mayores incompatibles; no se aplicó `--force`. Deben reevaluarse antes del deploy cuando exista una actualización compatible de sus mantenedores.
 
 ## Revisiones
 

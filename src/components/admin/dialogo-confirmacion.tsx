@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useId, useRef } from "react";
 
 import { Button } from "@/components/ui/button";
 
@@ -30,6 +30,8 @@ export function DialogoConfirmacion({
   alCancelar,
 }: DialogoConfirmacionProps) {
   const referenciaDialogo = useRef<HTMLDialogElement>(null);
+  const idTitulo = useId();
+  const idDescripcion = useId();
 
   useEffect(() => {
     const dialogo = referenciaDialogo.current;
@@ -53,8 +55,8 @@ export function DialogoConfirmacion({
         if (!procesando) alCancelar();
       }}
       className="m-auto w-[calc(100%_-_2rem)] max-w-[30rem] rounded-sm border border-border-strong bg-surface p-0 text-foreground shadow-elevated backdrop:bg-black/80 backdrop:backdrop-blur-sm"
-      aria-labelledby="titulo-dialogo-confirmacion"
-      aria-describedby="descripcion-dialogo-confirmacion"
+      aria-labelledby={idTitulo}
+      aria-describedby={idDescripcion}
     >
       <div className="p-5 sm:p-6">
         <p
@@ -63,13 +65,13 @@ export function DialogoConfirmacion({
           {etiqueta}
         </p>
         <h2
-          id="titulo-dialogo-confirmacion"
+          id={idTitulo}
           className="mt-3 font-display text-3xl font-bold uppercase leading-none tracking-wide"
         >
           {titulo}
         </h2>
         <p
-          id="descripcion-dialogo-confirmacion"
+          id={idDescripcion}
           className="mt-4 text-sm leading-6 text-foreground-secondary"
         >
           {descripcion}

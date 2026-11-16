@@ -13,6 +13,7 @@ import {
   crearVistaPreviaPrecios,
   mapearErroresSolicitudPrecios,
   validarSolicitudPrecios,
+  validarVistaPreviaPrecios,
   vistaPreviaCoincideConCalculo,
   type ErroresSolicitudPrecios,
   type VistaPreviaPrecios,
@@ -88,11 +89,20 @@ export async function accionGenerarPreviewPrecios(
 }
 
 export async function accionConfirmarPrecios(
-  preview: VistaPreviaPrecios,
+  entradaPreview: VistaPreviaPrecios,
   _estadoAnterior: EstadoConfirmacionPrecios,
 ): Promise<EstadoConfirmacionPrecios> {
   void _estadoAnterior;
   await exigirAdministradorActivo();
+
+  const resultadoPreview = validarVistaPreviaPrecios(entradaPreview);
+  if (!resultadoPreview.success) {
+    return {
+      mensaje:
+        "El preview no es válido o quedó incompleto. Recalculalo antes de confirmar.",
+    };
+  }
+  const preview = resultadoPreview.data;
 
   if (!preview.productos.length || !vistaPreviaCoincideConCalculo(preview)) {
     return {

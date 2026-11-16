@@ -8,6 +8,7 @@ import {
   formatearPorcentaje,
   porcentajeACentesimas,
   validarSolicitudPrecios,
+  validarVistaPreviaPrecios,
   vistaPreviaCoincideConCalculo,
   type ProductoPrecioFuente,
   type SolicitudActualizacionPrecios,
@@ -116,6 +117,9 @@ describe("validación de solicitud", () => {
 });
 
 describe("preview", () => {
+  const PRODUCTO_ID = "11111111-1111-4111-8111-111111111111";
+  const CATEGORIA_ID = "22222222-2222-4222-8222-222222222222";
+  const VARIANTE_ID = "33333333-3333-4333-8333-333333333333";
   const solicitud: SolicitudActualizacionPrecios = {
     alcance: "TODOS",
     referenciaId: null,
@@ -125,15 +129,15 @@ describe("preview", () => {
   };
   const productos: ProductoPrecioFuente[] = [
     {
-      id: "producto-1",
+      id: PRODUCTO_ID,
       nombre: "Remera",
       estado: "OCULTO",
       precioBase: "1000.00",
-      categoria: { id: "categoria-1", nombre: "Remeras" },
+      categoria: { id: CATEGORIA_ID, nombre: "Remeras" },
       banda: null,
       variantes: [
         {
-          id: "variante-1",
+          id: VARIANTE_ID,
           nombre: "Premium",
           precioEspecifico: "1200.00",
         },
@@ -191,6 +195,28 @@ describe("preview", () => {
           { ...resultado.data.productos[0], precioResultante: "1.00" },
         ],
       }),
+    ).toBe(false);
+  });
+
+  it("valida la estructura recibida antes de confirmar", () => {
+    const resultado = crearVistaPreviaPrecios(solicitud, productos);
+    expect(resultado.success).toBe(true);
+    if (!resultado.success) return;
+
+    expect(validarVistaPreviaPrecios(resultado.data).success).toBe(true);
+    expect(
+      validarVistaPreviaPrecios({
+        ...resultado.data,
+        cantidadOcultos: 0,
+      }).success,
+    ).toBe(false);
+    expect(
+      validarVistaPreviaPrecios({
+        ...resultado.data,
+        productos: [
+          { ...resultado.data.productos[0], precioResultante: "infinito" },
+        ],
+      }).success,
     ).toBe(false);
   });
 });

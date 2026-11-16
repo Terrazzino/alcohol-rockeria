@@ -2,13 +2,12 @@ import type { ComponentProps } from "react";
 
 import { Badge } from "@/components/ui/badge";
 
-type EstadoAdmin = "proximamente" | "activo" | "inactivo" | "error";
+type EstadoAdmin = "activo" | "inactivo" | "error";
 
 const configuracionEstado: Record<
   EstadoAdmin,
   { texto: string; variante: ComponentProps<typeof Badge>["variant"] }
 > = {
-  proximamente: { texto: "Próximamente", variante: "neutral" },
   activo: { texto: "Activo", variante: "success" },
   inactivo: { texto: "Inactivo", variante: "neutral" },
   error: { texto: "Revisar", variante: "error" },

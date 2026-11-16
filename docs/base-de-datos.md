@@ -11,7 +11,7 @@
 
 Prisma Client usa `@prisma/adapter-neon` y la conexión agrupada de `DATABASE_URL`. El cliente se conserva en `globalThis` durante desarrollo para evitar instancias adicionales causadas por hot reload.
 
-No se debe importar `src/lib/prisma.ts` desde Client Components. Las consultas se incorporarán en fases posteriores mediante Server Components, Server Actions o Route Handlers según corresponda.
+No se debe importar `src/lib/prisma.ts` desde Client Components. Las consultas actuales se ejecutan mediante Server Components y Server Actions; los Client Components reciben únicamente los datos públicos o editables que necesitan.
 
 ## Variables de entorno
 
@@ -68,7 +68,7 @@ Los identificadores son UUID generados por PostgreSQL. Los precios usan `Decimal
 - Slugs, SKU, rutas de imagen y correo administrativo poseen unicidad según corresponda.
 - Los campos de orden y precios tienen constraints no negativos en la migración.
 
-La referencia `rutaImagen` puede guardar una URL o ruta futura. El proveedor y la interfaz de upload se definirán en la Fase 12.
+`rutaImagen` guarda la URL HTTPS pública entregada por Vercel Blob. La carga valida tipo y tamaño en el servidor; la metadata, el orden, el alt text y la imagen principal se administran desde el panel.
 
 ## Administración y seguridad
 

@@ -42,9 +42,6 @@ export default async function PanelAdministracion() {
           >
             Accesos principales
           </h2>
-          <p className="hidden text-xs font-bold uppercase tracking-[0.12em] text-muted sm:block">
-            Base visual · Fase 4
-          </p>
         </div>
 
         <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
